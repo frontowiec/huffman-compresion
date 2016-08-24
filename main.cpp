@@ -1,22 +1,13 @@
 #include <iostream>
+#include "tree.hpp"
 
 using namespace std;
 
-struct TreeNode {
-    TreeNode *left;
-    TreeNode *right;
-    char value;
-};
-
-void createTree(TreeNode *&root) {
+void createTree(TreeNode *root) {
     int n, charCounter, bitsCounter;
     string bits;
     char signature;
-    TreeNode *pointer;
-
-    root = new TreeNode;
-    root->left = NULL;
-    root->right = NULL;
+    TreeNode *pointer; //TODO: pojecie wskaznika wyabstrahować do pojęcia węzła ??
 
     cout << "Podaj ilość znaków: " << endl;
     cin >> n;
@@ -30,23 +21,19 @@ void createTree(TreeNode *&root) {
         for (bitsCounter = 0; bitsCounter < (int) bits.length(); bitsCounter++) {
             if (bits[bitsCounter] == '1') {
                 if (!pointer->right) {
-                    pointer->right = new TreeNode;
-                    pointer->right->left = NULL;
-                    pointer->right->right = NULL;
+                    addRightNodeTo(pointer);
                 }
                 pointer = pointer->right;
             }
 
             if (bits[bitsCounter] == '0') {
                 if (!pointer->left) {
-                    pointer->left = new TreeNode;
-                    pointer->left->left = NULL;
-                    pointer->left->right = NULL;
+                    addLeftNodeTo(pointer);
                 }
                 pointer = pointer->left;
             }
         }
-        pointer->value = signature;
+        saveValueToLeft(pointer, signature);
     }
 }
 
@@ -78,7 +65,7 @@ void decodeTree(TreeNode *root) {
 }
 
 int main() {
-    TreeNode *root;
+    TreeNode *root = createRoot();
 
     createTree(root);
     decodeTree(root);
