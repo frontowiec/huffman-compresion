@@ -3,72 +3,67 @@
 
 using namespace std;
 
-void createTree(TreeNode *root) {
-    int n, charCounter, bitsCounter;
-    string bits;
-    char signature;
-    TreeNode *pointer; //TODO: pojecie wskaznika wyabstrahować do pojęcia węzła ??
+void creteListNodes(TreeNode *&root) {
+    int i;
+    string inputData;
+    getline(cin, inputData);
+    TreeNode *pointer;
 
-    cout << "Podaj ilość znaków: " << endl;
-    cin >> n;
+    root = NULL;
 
-    cout << "Podaj " << n << " par - znak ciąg bitów do zakodowania" << endl;
-
-    for (charCounter = 0; charCounter < n; charCounter++) {
-        cin >> signature >> bits;
+    for (i = 0; i < inputData.length(); i++) {
         pointer = root;
 
-        for (bitsCounter = 0; bitsCounter < (int) bits.length(); bitsCounter++) {
-            if (bits[bitsCounter] == '1') {
-                if (!pointer->right) {
-                    addRightNodeTo(pointer);
-                }
-                pointer = pointer->right;
-            }
-
-            if (bits[bitsCounter] == '0') {
-                if (!pointer->left) {
-                    addLeftNodeTo(pointer);
-                }
-                pointer = pointer->left;
-            }
+        while (pointer && pointer->value != inputData[i]) {
+            pointer = pointer->next;
         }
-        saveValueToLeft(pointer, signature);
+
+        if (pointer) {
+            pointer->count += 1;
+        } else {
+            pointer = new TreeNode;
+            pointer->next = root;
+            pointer->left = NULL;
+            pointer->right = NULL;
+            pointer->value = inputData[i];
+            pointer->count = 0;
+
+            root = pointer;
+        }
     }
-}
 
-void decodeTree(TreeNode *root) {
-    string bits;
-    TreeNode *pointer;
-    int bitsCounter;
+    int c;
+    char v;
 
-    cout << "Podaj ciąg bitów do odkodowania: " << endl;
-    cin >> bits;
+    //sortowanie
+    while (pointer->next) {
 
+        if(pointer->count > pointer->next->count) {
+            c = pointer->count;
+            v = pointer->value;
+
+            pointer->count = pointer->next->count;
+            pointer->value = pointer->next->value;
+
+            pointer->next->value = v;
+            pointer->next->count = c;
+        }
+        pointer = pointer->next;
+    }
+
+    cout << "Utworzona lista: " << endl;
     pointer = root;
+    while (pointer) {
+        cout << pointer->value << ":" << pointer->count << " | ";
 
-    for (bitsCounter = 0; bitsCounter < (int) bits.length(); bitsCounter++) {
-        if (bits[bitsCounter] == '0') {
-            pointer = pointer->left;
-        }
-
-        if (bits[bitsCounter] == '1') {
-            pointer = pointer->right;
-        }
-
-        if (!pointer->left) {
-            cout << pointer->value;
-            pointer = root;
-        }
+        pointer = pointer->next;
     }
 
+    cout << endl;
 }
 
 int main() {
-    TreeNode *root = createRoot();
-
-    createTree(root);
-    decodeTree(root);
-
+    TreeNode *root;
+    creteListNodes(root);
     return 0;
 }

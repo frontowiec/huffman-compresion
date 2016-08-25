@@ -4,7 +4,9 @@
 struct TreeNode {
     TreeNode *left;
     TreeNode *right;
+    TreeNode *next;
     char value;
+    int count;
 };
 
 TreeNode *createRoot();
