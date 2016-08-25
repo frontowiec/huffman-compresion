@@ -32,30 +32,37 @@ void creteListNodes(TreeNode *&root) {
         }
     }
 
+    //sortowanie
     int c;
     char v;
+    bool end;
 
-    //sortowanie
-    while (pointer->next) {
+    do {
+        end = true;
+        pointer = root;
 
-        if(pointer->count > pointer->next->count) {
-            c = pointer->count;
-            v = pointer->value;
+        while (pointer->next) {
+            if(pointer->count > pointer->next->count) {
+                c = pointer->count;
+                v = pointer->value;
 
-            pointer->count = pointer->next->count;
-            pointer->value = pointer->next->value;
+                pointer->count = pointer->next->count;
+                pointer->value = pointer->next->value;
 
-            pointer->next->value = v;
-            pointer->next->count = c;
+                pointer->next->value = v;
+                pointer->next->count = c;
+
+                end = false;
+            }
+            pointer = pointer->next;
         }
-        pointer = pointer->next;
-    }
+    } while (!end);
+
 
     cout << "Utworzona lista: " << endl;
     pointer = root;
     while (pointer) {
         cout << pointer->value << ":" << pointer->count << " | ";
-
         pointer = pointer->next;
     }
 
