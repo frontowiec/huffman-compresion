@@ -127,6 +127,24 @@ void huffman(TreeNode *root) {
     }
 }
 
+void encodeHuffman(TreeNode *root) {
+    TreeNode *pointer;
+    string bits;
+    cout << "Podaj ciąg bitów do rozpakowania" << endl;
+    cin >> bits;
+    unsigned int i;
+    for (i = 0; i < bits.length(); i++) {
+        pointer = root;
+        while (pointer->left || pointer->right) {
+            if (bits[i] == '0') pointer = pointer->left;
+            if (bits[i] == '1') pointer = pointer->right;
+        }
+        cout << pointer->value << " ";
+    }
+
+    cout << endl;
+}
+
 int main() {
     TreeNode *root;
     cout << "Podaj ciag znakow do kompresacji" << endl;
@@ -134,5 +152,7 @@ int main() {
     createTree(root);
     cout << "Skompresowany tekst:" << endl;
     huffman(root);
+    cout << endl;
+    encodeHuffman(root);
     return 0;
 }
