@@ -42,7 +42,7 @@ void creteListNodes(TreeNode *&root) {
         pointer = root;
 
         while (pointer->next) {
-            if(pointer->count > pointer->next->count) {
+            if (pointer->count > pointer->next->count) {
                 c = pointer->count;
                 v = pointer->value;
 
@@ -69,8 +69,76 @@ void creteListNodes(TreeNode *&root) {
     cout << endl;
 }
 
+void createTree(TreeNode *&root) {
+    TreeNode *pointer;
+    TreeNode *helperRoot;
+    TreeNode *node1;
+    TreeNode *node2;
+
+    while (true) {
+
+        node1 = root;
+        node2 = node1->next;
+
+        if(!node2) break;
+
+        root = node2->next; //lista bez dwoch pierwszych wezlow
+
+        pointer = new TreeNode;
+        pointer->left = node1;
+        pointer->right = node2;
+        pointer->count = node1->count + node2->count;
+
+        if(!root || (pointer->count <= root->count))
+        {
+            pointer->next = root;
+            root = pointer;
+            continue;
+        }
+
+        helperRoot = root;
+
+
+        while (helperRoot->next && pointer->count > helperRoot->count) {
+            helperRoot = helperRoot->next;
+        }
+
+        pointer->next = helperRoot->next;
+        root->next = pointer;
+    }
+}
+
+void printTree(TreeNode *&root) {
+    TreeNode *pointer;
+    pointer = root;
+
+    if (pointer) {
+        while (pointer) {
+            cout << '\t';
+            cout << pointer->value << ":" << pointer->count << " ";
+            pointer = pointer->next;
+        }
+
+        pointer = root;
+
+        cout << endl;
+
+        while (pointer) {
+            cout << '\t';
+            if (pointer->left) cout << pointer->left->value << ":" << pointer->left->count << " ";
+            if (pointer->right) cout << pointer->right->value << ":" << pointer->right->count << " ";
+
+            pointer = pointer->next;
+        }
+    }
+}
+
 int main() {
     TreeNode *root;
     creteListNodes(root);
+    createTree(root);
+    cout << endl;
+    printTree(root);
+    cout << endl;
     return 0;
 }
