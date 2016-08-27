@@ -3,9 +3,10 @@
 
 using namespace std;
 
+string inputData;
+
 void creteListNodes(TreeNode *&root) {
     int i;
-    string inputData;
     getline(cin, inputData);
     TreeNode *pointer;
 
@@ -80,7 +81,7 @@ void createTree(TreeNode *&root) {
         node1 = root;
         node2 = node1->next;
 
-        if(!node2) break;
+        if (!node2) break;
 
         root = node2->next; //lista bez dwoch pierwszych wezlow
 
@@ -89,8 +90,7 @@ void createTree(TreeNode *&root) {
         pointer->right = node2;
         pointer->count = node1->count + node2->count;
 
-        if(!root || (pointer->count <= root->count))
-        {
+        if (!root || (pointer->count <= root->count)) {
             pointer->next = root;
             root = pointer;
             continue;
@@ -108,37 +108,31 @@ void createTree(TreeNode *&root) {
     }
 }
 
-void printTree(TreeNode *&root) {
-    TreeNode *pointer;
-    pointer = root;
+bool code(char c, TreeNode *&root, string bit) {
 
-    if (pointer) {
-        while (pointer) {
-            cout << '\t';
-            cout << pointer->value << ":" << pointer->count << " ";
-            pointer = pointer->next;
+    if (!root->left) {
+        if (c != root->value) return false;
+        else {
+            cout << bit;
         }
+    } else {
+        return code(c, root->left, bit + "0") || code(c, root->right, bit + "1");
+    }
+}
 
-        pointer = root;
-
-        cout << endl;
-
-        while (pointer) {
-            cout << '\t';
-            if (pointer->left) cout << pointer->left->value << ":" << pointer->left->count << " ";
-            if (pointer->right) cout << pointer->right->value << ":" << pointer->right->count << " ";
-
-            pointer = pointer->next;
-        }
+void huffman(TreeNode *root) {
+    unsigned int i;
+    for (i = 0; i < inputData.length(); i++) {
+        code(inputData[i], root, "");
     }
 }
 
 int main() {
     TreeNode *root;
+    cout << "Podaj ciag znakow do kompresacji" << endl;
     creteListNodes(root);
     createTree(root);
-    cout << endl;
-    printTree(root);
-    cout << endl;
+    cout << "Skompresowany tekst:" << endl;
+    huffman(root);
     return 0;
 }
